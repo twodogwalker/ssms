@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="app_name">Simple SMS</string>
+  <string name="new_sms_button">new SMS Message</string>
+  <string name="main_no_items">No messages to display</string>
+  <string-array name="boxes_array">
+    <item>Inbox</item>
+    <item>Outbox</item>
+    <item>Draft</item>
+    <item>Sent</item>
+  </string-array>
+</resources>
