@@ -6,6 +6,7 @@ package nl.frankprins.ssms;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,7 +18,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +33,14 @@ public class NewSmsMessage extends Activity {
 
   public static final int PICK_CONTACT = 1;
   private static final String TAG = "SSMS-Debug";
-  Spinner txtContacts;
-  ArrayAdapter adapter;
+  EditText numberInput;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.new_sms_form);
     Button btnContacts = (Button) findViewById(R.id.select);
-    txtContacts = (Spinner) findViewById(R.id.entry);
-    adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    txtContacts.setAdapter(adapter);
+    numberInput = (EditText) findViewById(R.id.entry);
     btnContacts.setOnClickListener(new OnClickListener() {
 
       @Override
@@ -51,12 +50,13 @@ public class NewSmsMessage extends Activity {
         startActivityForResult(intent, PICK_CONTACT);
       }
     });
+    //EditText msgbody = (EditText) findViewById(R.id.msgbody);
   }
 
   @Override
   public void onActivityResult(int reqCode, int resultCode, Intent data) {
     super.onActivityResult(reqCode, resultCode, data);
-    List<String> numbers = new ArrayList();
+    List<String> numberList = new ArrayList();
     switch (reqCode) {
       case (PICK_CONTACT):
         if (resultCode == Activity.RESULT_OK) {
@@ -73,7 +73,7 @@ public class NewSmsMessage extends Activity {
               while (pCur.moveToNext()) {
                 String number = pCur.getString(
                         pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                numbers.add(number);
+                numberList.add(number);
                 Log.v(TAG, "number: " + number);
               }
               pCur.close();
@@ -82,18 +82,19 @@ public class NewSmsMessage extends Activity {
         }
         break;
     }
-    if (adapter.getCount() > 1) {
-      final CharSequence[] items = (CharSequence[]) numbers.toArray();
-
-      AlertDialog.Builder builder = new AlertDialog.Builder(NewSmsMessage.this);
-      builder.setTitle("Found " + adapter.getCount() + " numbers, pick the correct one!");
-      builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+    if (numberList.size() > 1) {
+      final String[] numberArray = numberList.toArray(new String[numberList.size()]);
+      Builder builder = new AlertDialog.Builder(NewSmsMessage.this);
+      builder.setTitle("Found " + numberList.size() + " numbers, pick the correct one!");
+      builder.setSingleChoiceItems(numberArray, -1, new DialogInterface.OnClickListener() {
 
         public void onClick(DialogInterface dialog, int item) {
-          Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
+          numberInput.setText(numberArray[item]);
+          dialog.dismiss();
         }
       });
-      AlertDialog alert = builder.create();
+
+      builder.show();
     }
 
   }
