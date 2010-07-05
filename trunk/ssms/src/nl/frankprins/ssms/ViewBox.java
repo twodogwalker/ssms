@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import java.text.Format;
@@ -27,11 +28,12 @@ import nl.frankprins.ssms.ClickableListAdapter.ViewHolder;
  */
 public class ViewBox extends ListActivity {
 
+  private static final String TAG = "SSMS-Debug";
   private ArrayList<SmsMessage> messageList = null;
   MyClickableListAdapter myAdapter;
   private ProgressDialog m_ProgressDialog = null;
   private Runnable viewMessages;
-  private final String dateFormat = "MMM dd, yyyy HH:mm:ss";
+  private final String dateFormat = "MMM dd, yyyy HH:mm";
   Format formatter = new SimpleDateFormat(dateFormat);
 
   @Override
@@ -46,6 +48,7 @@ public class ViewBox extends ListActivity {
         boxToView = box;
       }
     }
+    final String boxName = box;
     setTitle(boxToView);
     final Uri boxUri = Uri.parse("content://sms/" + boxToView);
     messageList = new ArrayList<SmsMessage>();
@@ -54,13 +57,14 @@ public class ViewBox extends ListActivity {
 
       @Override
       public void run() {
-        getMessages(boxUri);
+        getMessages(boxName, boxUri);
       }
     };
     Thread thread = new Thread(null, viewMessages, "MagentoBackground");
     thread.start();
     m_ProgressDialog = ProgressDialog.show(ViewBox.this, "", "loading...", true);
-    myAdapter = new MyClickableListAdapter(this, R.layout.listrow, messageList);
+    myAdapter = new MyClickableListAdapter(this, R.layout.listrow, messageList, boxToView);
+    this.getListView().setFastScrollEnabled(true);
     setListAdapter(myAdapter);
   }
   private Runnable returnRes = new Runnable() {
@@ -75,7 +79,7 @@ public class ViewBox extends ListActivity {
     }
   };
 
-  private void getMessages(Uri boxUri) {
+  private void getMessages(String boxName, Uri boxUri) {
     int count = 0;
     messageList = new ArrayList<SmsMessage>();
     Cursor cursor = getContentResolver().query(boxUri,
@@ -89,7 +93,7 @@ public class ViewBox extends ListActivity {
           m.setThreadId(cursor.getLong(1));
           String number = cursor.getString(2);
           m.setAddress(number);
-          String contactName = Utilities.getPersonNameFromNumber(this, number);
+          String contactName = Utilities.getPersonNameFromNumber(this, boxName, number);
           m.setAddressName(contactName);
           m.setContactId(cursor.getLong(3));
           m.setTimestamp(cursor.getLong(4));
@@ -115,15 +119,32 @@ public class ViewBox extends ListActivity {
 
   private class MyClickableListAdapter extends ClickableListAdapter {
 
-    public MyClickableListAdapter(Context context, int viewid, List<SmsMessage> objects) {
+    private boolean incoming;
+
+    public MyClickableListAdapter(Context context, int viewid, List<SmsMessage> objects,
+            String box) {
       super(context, viewid, objects);
+      incoming = box.equalsIgnoreCase("Inbox") ? true : false;
     }
 
     protected void bindHolder(ViewHolder h) {
       MyViewHolder mvh = (MyViewHolder) h;
       SmsMessage message = (SmsMessage) mvh.data;
-      mvh.firstRow.setText("Date: " + formatDate(message.getTimestamp()));
-      mvh.secondRow.setText("Phone: " + message.getAddressName());
+      String namePreFix = "-";
+      if (incoming) {
+        namePreFix = getResources().getString(R.string.messageListNamePrefixFrom);
+      } else {
+        namePreFix = getResources().getString(R.string.messageListNamePrefixTo);
+      }
+      mvh.firstRow.setText(namePreFix + ": " + message.getAddressName()
+              + ", on:" + formatDate(message.getTimestamp()));
+      Log.d(TAG, String.valueOf(message.getBody().length()));
+      if(message.getBody().length() > 36) {
+        mvh.secondRow.setText(message.getBody().substring(0, 35));
+      } else {
+        mvh.secondRow.setText(message.getBody());
+      }
+      
     }
 
     @Override
@@ -144,15 +165,16 @@ public class ViewBox extends ListActivity {
           adb.show();
         }
       });
+
       return mvh; // finally, we return our new holder
     }
 
     private String formatDate(long timestamp) {
-        if (timestamp > 0) {
-          Date date = new Date(timestamp);
-          return formatter.format(date);
-        }
-        return null;
+      if (timestamp > 0) {
+        Date date = new Date(timestamp);
+        return formatter.format(date);
+      }
+      return null;
     }
   }
 }
