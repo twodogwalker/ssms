@@ -32,6 +32,8 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f030000;
         public static final int main_no_items=0x7f030002;
+        public static final int messageListNamePrefixFrom=0x7f030003;
+        public static final int messageListNamePrefixTo=0x7f030004;
         public static final int new_sms_button=0x7f030001;
     }
 }

@@ -22,11 +22,11 @@ public class Utilities {
     }
     final Uri boxUri = Uri.parse("content://sms/" + smsBox.toLowerCase());
     String UNREAD_CONDITION = null;
-    if(unread) {
+    if (unread) {
       UNREAD_CONDITION = "read=0";
     }
     int count = 0;
-    Cursor cursor = context.getContentResolver().query(boxUri, 
+    Cursor cursor = context.getContentResolver().query(boxUri,
             new String[]{"_id"}, UNREAD_CONDITION, null, null);
     if (cursor != null) {
       try {
@@ -38,27 +38,30 @@ public class Utilities {
     return count;
   }
 
-  public static String getPersonNameFromNumber(Context context, String address) {
+  public static String getPersonNameFromNumber(Context context, String box,
+          String address) {
     if (address == null) {
-      return null;
+      return "unknown";
     }
-    Cursor cursor = context.getContentResolver().query(
-            Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address)),
-            new String[]{PhoneLookup.DISPLAY_NAME}, null, null, null);
-    if (cursor != null) {
-      try {
-        if (cursor.getCount() > 0) {
-          cursor.moveToFirst();
-          String name = cursor.getString(0);
-          return name;
+    if (!box.equalsIgnoreCase("draft")) {
+      Cursor cursor = context.getContentResolver().query(
+              Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(address)),
+              new String[]{PhoneLookup.DISPLAY_NAME}, null, null, null);
+      if (cursor != null) {
+        try {
+          if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            String name = cursor.getString(0);
+            return name;
+          }
+        } finally {
+          cursor.close();
         }
-      } finally {
-        cursor.close();
       }
     }
     if (address != null) {
       return PhoneNumberUtils.formatNumber(address);
     }
-    return null;
+    return "unknown";
   }
 }
