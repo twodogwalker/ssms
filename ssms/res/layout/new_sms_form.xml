@@ -5,25 +5,49 @@
               android:layout_height="fill_parent">
   <LinearLayout
     android:orientation="horizontal"
-    android:padding="10sp"
+    android:padding="5sp"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="30px">
     <TextView
       android:id="@+id/label"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_height="fill_parent"
       android:text="To:"/>
     <EditText android:id="@+id/entry"
-              android:layout_height="40px"
+              android:layout_height="fill_parent"
               android:layout_width="wrap_content"
               android:textSize="18sp"
               android:layout_weight="1"
-              android:layout_marginTop="3dip"/>
+              android:layout_marginTop="1dip"/>
     <Button
       android:id="@+id/select"
-      android:layout_width="50px"
-      android:layout_height="40px"
+      android:layout_width="60px"
+      android:layout_height="fill_parent"
       android:gravity="right"
-      android:text="->" />
+      android:text="find" />
+  </LinearLayout>
+  <LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5sp">
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Message:"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentLeft="true" />
+    <EditText
+      android:layout_width="fill_parent"
+      android:layout_height="130px"
+      android:layout_marginTop="1dip"
+      android:textSize="18sp"
+      android:layout_alignParentLeft="true" />
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="counter:"
+      android:layout_alignParentBottom="false"
+      android:layout_alignParentLeft="true" />
   </LinearLayout>
 </LinearLayout>

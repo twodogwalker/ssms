@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <string name="app_name">Simple SMS</string>
+  <string name="app_name">SimpleSMS</string>
   <string name="new_sms_button">New SMS Message</string>
   <string name="main_no_items">No messages to display</string>
   <string name="messageListNamePrefixFrom">From</string>

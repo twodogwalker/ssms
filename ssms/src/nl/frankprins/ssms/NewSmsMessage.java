@@ -33,7 +33,7 @@ public class NewSmsMessage extends Activity {
 
   public static final int PICK_CONTACT = 1;
   private static final String TAG = "SSMS-Debug";
-  EditText numberInput;
+  EditText numberInput, messageBody;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,8 @@ public class NewSmsMessage extends Activity {
         startActivityForResult(intent, PICK_CONTACT);
       }
     });
-    //EditText msgbody = (EditText) findViewById(R.id.msgbody);
+//      messageBody = (EditText) findViewById(R.id.messagebody);
+//      messageBody.setText("type some message here");
   }
 
   @Override
