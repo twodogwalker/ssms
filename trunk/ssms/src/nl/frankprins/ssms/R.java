@@ -15,10 +15,12 @@ public final class R {
     }
     public static final class id {
         public static final int bottomtext=0x7f050001;
-        public static final int boxname=0x7f050005;
+        public static final int boxname=0x7f050007;
         public static final int entry=0x7f050003;
         public static final int label=0x7f050002;
-        public static final int num_total=0x7f050006;
+        public static final int msgBody=0x7f050005;
+        public static final int msgCharCount=0x7f050006;
+        public static final int num_total=0x7f050008;
         public static final int select=0x7f050004;
         public static final int toptext=0x7f050000;
     }
@@ -32,8 +34,12 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f030000;
         public static final int main_no_items=0x7f030002;
+        public static final int messageComposeHint=0x7f030008;
         public static final int messageListNamePrefixFrom=0x7f030003;
         public static final int messageListNamePrefixTo=0x7f030004;
+        public static final int messageNewCounterLabel=0x7f030007;
+        public static final int messageNewFindButtonText=0x7f030005;
+        public static final int messageNewMessageLabel=0x7f030006;
         public static final int new_sms_button=0x7f030001;
     }
 }
