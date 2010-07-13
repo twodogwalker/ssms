@@ -8,20 +8,23 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.TextView.OnEditorActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,8 @@ public class NewSmsMessage extends Activity {
   public static final int PICK_CONTACT = 1;
   private static final String TAG = "SSMS-Debug";
   EditText numberInput, messageBody;
+  TextView counter;
+  int charCounter = 0;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +55,24 @@ public class NewSmsMessage extends Activity {
         startActivityForResult(intent, PICK_CONTACT);
       }
     });
-//      messageBody = (EditText) findViewById(R.id.messagebody);
-//      messageBody.setText("type some message here");
+    messageBody = (EditText) findViewById(R.id.msgBody);
+    counter = (TextView) findViewById(R.id.msgCharCount);
+    messageBody.addTextChangedListener(new TextWatcher() {
+
+      public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // I left empty
+      }
+
+      public void beforeTextChanged(CharSequence s, int start, int count,
+              int after) {
+        // I left empty
+      }
+
+      public void afterTextChanged(Editable s) {
+        counter.setText(String.valueOf(s.length()));
+      }
+    });
+
   }
 
   @Override
