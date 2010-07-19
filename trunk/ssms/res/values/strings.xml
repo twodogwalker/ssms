@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
   <string name="app_name">SimpleSMS</string>
-  <string name="new_sms_button">New SMS Message</string>
+  <string name="menu_item_new_sms">New</string>
+  <string name="menu_item_quit">Quit</string>
   <string name="main_no_items">No messages to display</string>
   <string name="messageListNamePrefixFrom">From</string>
   <string name="messageListNamePrefixTo">To</string>
