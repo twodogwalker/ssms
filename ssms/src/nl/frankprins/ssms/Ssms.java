@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -36,20 +39,33 @@ public class Ssms extends ListActivity {
     setContentView(R.layout.smsboxes);
     List boxes =
             new ArrayList(Arrays.asList(getResources().getStringArray(R.array.boxes_array)));
-    Button newSmsButton = new Button(this);
-    newSmsButton.setText(getResources().getString(R.string.new_sms_button));
-    newSmsButton.setOnClickListener(new View.OnClickListener() {
-
-      public void onClick(View v) {
-        Log.v(TAG, "clicked new SMS button");
-        Intent intent = new Intent(Ssms.this, NewSmsMessage.class);
-        startActivity(intent);
-      }
-    });
     ListView listView = getListView();
-    listView.addHeaderView(newSmsButton);
     smsBoxListAdapter = new SmsBoxListAdapter(this, R.layout.smsbox_row, boxes);
     listView.setAdapter(smsBoxListAdapter);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.main_menu, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // Handle item selection
+    switch (item.getItemId()) {
+      case R.id.new_sms:
+        Log.v(TAG, "clicked new SMS option");
+        Intent intent = new Intent(Ssms.this, NewSmsMessage.class);
+        startActivity(intent);
+        return true;
+      case R.id.quit:
+        Log.v(TAG, "clicked quit button, to be implemented");
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   static class MyViewHolder extends ViewHolder {
