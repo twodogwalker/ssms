@@ -9,7 +9,7 @@
   <string name="messageNewFindButtonText">Find</string>
   <string name="messageNewMessageLabel">Message:</string>
   <string name="messageNewCounterLabel">Characters:</string>
-  <string name="messageComposeHint">Enter the body of the Text Message</string>
+  <string name="messageComposeHint">Enter the body</string>
   <string-array name="boxes_array">
     <item>Inbox</item>
     <item>Outbox</item>
