@@ -64,6 +64,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="false"
                 android:layout_alignParentLeft="true" />
+   <Button android:id="@+id/sendButton"
+            android:layout_width="60px"
+            android:layout_height="40px"
+            android:gravity="right"
+            android:text="@string/messageNewSendButtonText" />
+
     </LinearLayout>
   </LinearLayout>
 </LinearLayout>
