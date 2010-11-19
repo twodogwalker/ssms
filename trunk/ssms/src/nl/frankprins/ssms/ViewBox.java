@@ -9,15 +9,21 @@ import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,6 +50,12 @@ public class ViewBox extends ListActivity implements OnScrollListener {
   String boxName = "";
   Uri boxUri = null;
   Cursor cursor;
+  private static final int SWIPE_MIN_DISTANCE = 120;
+  private static final int SWIPE_MAX_OFF_PATH = 250;
+  private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+  private GestureDetector gestureDetector;
+  View.OnTouchListener gestureListener;
+  ListView lv;
 
   @Override
   public void onCreate(Bundle bundle) {
@@ -63,7 +75,6 @@ public class ViewBox extends ListActivity implements OnScrollListener {
     messageList = new ArrayList<SmsMessage>();
     cursor = getContentResolver().query(boxUri,
             new String[]{"_id", "thread_id", "address", "person", "date", "body"}, null, null, null);
-    startManagingCursor(cursor);
     // load messages
     viewMessages = new Runnable() {
 
@@ -78,9 +89,22 @@ public class ViewBox extends ListActivity implements OnScrollListener {
     thread.start();
     m_ProgressDialog = ProgressDialog.show(ViewBox.this, "", "loading...", true);
     myAdapter = new MyClickableListAdapter(this, R.layout.listrow, messageList, boxToView);
-    this.getListView().setFastScrollEnabled(true);
     setListAdapter(myAdapter);
-    getListView().setOnScrollListener(this);
+    lv = getListView();
+    lv.setOnScrollListener(this);
+//    // Gesture detection
+    gestureDetector = new GestureDetector(new MyGestureDetector());
+    gestureListener = new View.OnTouchListener() {
+
+      public boolean onTouch(View v, MotionEvent event) {
+        if (gestureDetector.onTouchEvent(event)) {
+          return true;
+        }
+        return false;
+      }
+    };
+    lv.setOnTouchListener(gestureListener);
+
   }
   private Runnable returnRes = new Runnable() {
 
@@ -96,7 +120,7 @@ public class ViewBox extends ListActivity implements OnScrollListener {
 
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && !cursor.isClosed()) {
       cursor.close();
     }
     return super.onKeyDown(keyCode, event);
@@ -156,6 +180,43 @@ public class ViewBox extends ListActivity implements OnScrollListener {
           int totalItemCount) {
   }
 
+  public class MyGestureDetector extends SimpleOnGestureListener {
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+      try {
+        if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
+          return false;
+        }
+
+        // right to left swipe
+        if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+          int x = (int) e1.getX();
+          int y = (int) e1.getY();
+          SmsMessage m = (SmsMessage) myAdapter.getItem(lv.pointToPosition(x, y));
+//          // TODO: make a friendlier looking window for the body
+          Builder adb = new AlertDialog.Builder(ViewBox.this);
+          adb.setTitle(m.getAddressName());
+          adb.setMessage(m.getBody());
+          adb.setPositiveButton("close", null);
+          adb.show();
+        } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+          int x = (int) e1.getX();
+          int y = (int) e1.getY();
+          SmsMessage m = (SmsMessage) myAdapter.getItem(lv.pointToPosition(x, y));
+          Intent intent = new Intent(ViewBox.this, NewSmsMessage.class);
+          Bundle bundle = new Bundle();
+          bundle.putString("nl.frankprins.ssms.replynumber", m.getAddress());
+          intent.putExtras(bundle);
+          startActivity(intent);
+        }
+      } catch (Exception e) {
+        // nothing
+      }
+      return false;
+    }
+  }
+
   static class MyViewHolder extends ViewHolder {
 
     TextView firstRow;
@@ -201,20 +262,6 @@ public class ViewBox extends ListActivity implements OnScrollListener {
       TextView firstRow = (TextView) v.findViewById(R.id.toptext);
       TextView secondRow = (TextView) v.findViewById(R.id.bottomtext);
       ViewHolder mvh = new MyViewHolder(firstRow, secondRow);
-      v.setOnClickListener(new ClickableListAdapter.OnClickListener(mvh) {
-
-        public void onClick(View v, ViewHolder viewHolder) {
-          MyViewHolder mvh = (MyViewHolder) viewHolder;
-          SmsMessage m = (SmsMessage) mvh.data;
-          // TODO: make a friendlier looking window for the body
-          Builder adb = new AlertDialog.Builder(ViewBox.this);
-          adb.setTitle(m.getAddressName());
-          adb.setMessage(m.getBody());
-          adb.setPositiveButton("close", null);
-          adb.show();
-        }
-      });
-
       return mvh; // finally, we return our new holder
     }
 
