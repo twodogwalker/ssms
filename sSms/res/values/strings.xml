@@ -3,4 +3,5 @@
     <string name="hello">Hello World, Main!</string>
     <string name="app_name">SimpleSMS</string>
     <string name="btn_inbox">Inbox</string>
+    <string name="btn_sendbox">Send</string>
 </resources>
