@@ -4,4 +4,7 @@
     <string name="app_name">SimpleSMS</string>
     <string name="btn_inbox">Inbox</string>
     <string name="btn_sendbox">Send</string>
+    <string name="to">To</string>
+    <string name="from">From</string>
+    <string name="main_no_items">no items</string>
 </resources>

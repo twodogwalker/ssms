@@ -7,8 +7,8 @@ import android.widget.Button;
 
 public class MenuActivity extends MainActivity {
 	private static final String TAG = "SSMS-Debug";
-	private static final int INBOX = 1;
-	private static final int SENDBOX = 2;
+	private static final String INBOX = "inbox";
+	private static final String SENDBOX = "sent";
 
 	/** Called when the activity is first created. */
 	@Override
