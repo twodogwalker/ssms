@@ -18,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class ViewBoxActivity extends ListActivity implements OnScrollListener {
@@ -53,7 +52,7 @@ public class ViewBoxActivity extends ListActivity implements OnScrollListener {
 
       @Override
       public void run() {
-        List messages = getMessages(boxName, 0);
+        List<SmsMessage> messages = getMessages(boxName, 0);
         messageList.addAll(messages);
         shown = messageList.size();
       }
@@ -125,7 +124,7 @@ public class ViewBoxActivity extends ListActivity implements OnScrollListener {
 
           @Override
           public void run() {
-            List messages = getMessages(boxName, shown);
+            List<SmsMessage> messages = getMessages(boxName, shown);
             messageList.addAll(messages);
             shown = messageList.size();
           }
