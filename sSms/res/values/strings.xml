@@ -7,4 +7,9 @@
     <string name="to">To</string>
     <string name="from">From</string>
     <string name="main_no_items">no items</string>
+    <string name="about_title">Simple SMS</string>
+    <string name="about_version">Version 0.5</string>
+    <string name="about_msg">This is a very limited SMS application, its main purpose being fast. No fancy features, no conversation view etc, just some boxes and so on.  Contact me on twitter or facebook in case of any questions or requests, I will be more then happy trying to help.</string>
+    <string name="about_twitter">www.twitter.com/frankprins</string>
+    <string name="about_facebook">http://www.facebook.com/profile.php?id=1309356554</string>
 </resources>

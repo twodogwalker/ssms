@@ -35,6 +35,15 @@ public class MenuActivity extends MainActivity {
 				startActivity(intent);
 			}
 		});
+    Button aboutBtn = (Button) findViewById(R.id.btn_about);
+    aboutBtn.setOnClickListener(new View.OnClickListener() {
+
+      public void onClick(View v) {
+        Intent intent = new Intent(getApplicationContext(),
+            AboutActivity.class);
+        startActivity(intent);
+      }
+    });
 	}
 
 }
